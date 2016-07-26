@@ -1,0 +1,2 @@
+$query = "SET SESSION time_zone = 'Asia/Kolkata'";
+mysqli_query($conn,$query);

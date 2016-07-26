@@ -1,0 +1,355 @@
+body{
+margin: 0;
+padding: 0;
+height: 100%;
+overflow: hidden;
+}
+
+#header {
+    width: 100%;
+    /*background: #e67100;*/
+    background:#0099cc;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+}
+
+#header img{
+    float: left;
+    position: relative;
+    background: red;
+    margin-left: 10px;
+    height: 10px;
+    width: 20em;
+}
+
+#go_back a{
+     text-decoration: none;
+     color:white;
+}
+
+#go_back{
+    position: absolute;
+    z-index: 10;
+    
+    background-color: #40bf80;
+    width: 80px;
+    height: 15px;
+    padding: 8px;
+    text-align: center;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+   
+ 
+   top:0;
+   right: 20;
+}
+
+#go_back:hover{
+    background-color: #00b2b3;
+    color:#ffb74d;
+    font-weight: bold;
+}
+
+
+#header h2 a{
+    
+    color: white;
+    text-decoration: none;
+}
+
+#subheader{
+      width: 100%;
+    height: 30px;
+    background: darkslategrey;
+    
+    
+}
+
+#subheader table{
+    /*padding-top: 5px;*/
+    margin-left: auto;
+    margin-right: auto;
+    
+    
+    
+}
+
+#subheader td.key{
+    color: whitesmoke;
+    padding-left: 5px;
+   
+    
+}
+
+#subheader td.value{
+    color: #ff7d00;
+    padding-left: 5px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: large;
+    font-weight: bold;
+    
+}
+
+
+
+#data table tr:nth-child(even) {
+    
+    background-color: #eee;
+}
+
+#data table tr:nth-child(odd) {
+    
+    background-color: #fff;
+}
+
+#data{
+    width:50em;
+     height: 32em;
+    /*margin-top: 20px;*/
+     position: relative;
+     float: left;  
+     /*border:solid red;*/
+     overflow: hidden;
+     /*min-height:calc(100% - 200px);*/
+     box-sizing: border-box;
+     
+    
+}
+
+#data:hover{
+    width:50em;
+     height: 32em;
+    /*margin-top: 20px;*/
+     position: relative;
+     float: left;  
+     /*border:solid red;*/
+     overflow: auto;
+     /*min-height:calc(100% - 200px);*/
+     box-sizing: border-box;
+     
+    
+}
+
+
+
+#data table{
+    border-collapse: collapse;
+    margin-top: 25px;
+    margin-bottom: 10em;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#data table tr{
+    border-collapse: collapse;
+    border:solid;
+    border-width:1px;
+    border-color: darkgray;
+}
+
+#data table tr td{
+    border-collapse: collapse;
+    border-style: none;
+    width: 50%;
+    padding-left: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#data table tr td.col_span{
+    text-align: center;
+    font-weight: bolder;
+}
+
+
+#remark_container{
+    height: 32em;
+    position: relative;
+    float: right;
+    /*border: solid;
+    border-color: blue;*/
+    width:30em;
+    overflow: hidden;
+    
+}
+
+#remark_container:hover{
+    height: 32em;
+    position: relative;
+    float: right;
+   /* border: solid;
+    border-color: blue;*/
+    width:30em;
+    overflow: auto;
+    
+}
+
+textarea{
+    width:100%;
+    height: auto;
+    }
+
+
+/*===============Remark box=====================*/
+
+.tip {
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  background: transparent;
+  border: 10px solid #00e6ac;
+}
+
+.tip-left {
+  top: 10px;
+  left: -25px;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  border-bottom-color: transparent;  
+}
+
+.tip-right {
+  top: 10px;
+  right: -25px;
+  border-top-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: transparent;  
+}
+
+.dialogbox{
+    /*border:solid;
+    border-color: red;*/
+    margin-top: 2em;
+    margin-bottom: 1em;
+    
+}
+.dialogbox .icon{
+  position: static;
+  /*max-width: px;*/
+  /*height: auto;*/
+  /*margin-top: 10px;
+  margin-bottom: 0px;
+  margin-right: 0px;
+  margin-left: 100px;
+  border:solid;
+  border-color: pink;*/
+  float: left;
+  padding: 1em;
+  /*margin: 30px 20px;*/
+ 
+  /*padding: 5px;*/
+  /*background-color:  #00cc99;
+  border-radius: 100%;
+  border: 1px solid  #00e6ac;*/
+  margin-left: 20PX;
+  width:30px;
+height:30px;
+border-radius:50%;
+font-size:20Px;
+font-weight: bolder;
+color: gray;
+line-height:30px;
+text-align:center;
+background: #ffcc80;
+  
+  
+}
+
+.dialogbox .body {
+  position: relative;
+  max-width: 300px;
+  height: auto;
+  /*margin-top: 30px;*/
+  margin-right: 10px;
+  margin-left: 150px;
+  /*margin: 30px 20px;*/
+ 
+  padding: 5px;
+  background-color:  #00cc99;
+  border-radius: 3px;
+  border: 5px solid  #00e6ac;
+}
+
+.body .message {
+  min-height: 30px;
+  border-radius: 3px;
+  font-family: Arial;
+  font-size: 14pt;
+  line-height: 1.5;
+  color: black;
+}
+
+.body .time {
+  text-align: right;
+  font-family: Arial;
+  font-size: 8pt;
+  line-height: 1.5;
+  color: #006666;
+}
+
+
+/*Footer CSS*/
+
+#footer {
+    position: fixed;
+    float: left;
+    height: 50px;
+    width: 100%;
+    bottom: 0px;
+    background: darkslategrey;
+}
+
+#footer #remark table {
+   
+   color:white;
+    /*margin-top: 10px;*/
+    
+    overflow: visible;
+}
+
+#footer #remark table .but{
+   
+   color:white;
+   display: inline-block;
+   
+   padding-left: 10px;
+   padding-right: 10px;
+   padding-top: 5px;
+   padding-bottom: 5px;
+   border-style:none;
+    font-family: "Bitter",serif;
+  line-height: 1.8;
+   box-shadow: none;
+   border-radius: 4px;
+    
+}
+
+
+
+/*Scroll bar design*/
+
+
+
+
+::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+::-webkit-scrollbar-track {
+	background-color: rgba(113,112,107,0.1);
+	-webkit-border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:vertical {
+	background-color: rgba(0,0,0,.2);
+	-webkit-border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:vertical:hover,
+::-webkit-scrollbar-thumb:horizontal:hover {
+	background: #00e6ac;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+	background-color: rgba(0,0,0,.2);
+	-webkit-border-radius: 6px;
+}

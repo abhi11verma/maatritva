@@ -1,0 +1,16 @@
+{
+    "remotePath": "./",
+    "host": "ftp.samenoid.16mb.com",
+    "username": "u652239707",
+    "password": "11021991",
+    "port": 21,
+    "protocol": "ftp",
+    "uploadOnSave": false,
+    "passive": false,
+    "debug": false,
+    "privateKeyPath": null,
+    "ignore": [
+        "\\.vscode",
+        "\\.git"
+    ]
+}
