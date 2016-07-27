@@ -5,6 +5,14 @@ This code is a webservice to update data by Medical officer for PW
 ================================================================================
 */
 
+if($_SERVER['REQUEST_METHOD'] == 'OPTIONS')
+{
+  //header('Access-Control-Allow-Origin: null');
+  header('Access-Control-Allow-Headers: Content-type');
+  header("HTTP/1.1 200 OK");
+  die();
+}
+
 header("Content-Type:application/json");
 
 

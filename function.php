@@ -13,15 +13,17 @@
 //User functions
 
 //verify if user exist
-
-function verify_user($emp_id,$pass)
+/*
+function verify_user($aadhar_id,$password)
 {   include'./dbconnect.php';
-    $query = "Select * From user_profile where emp_id = '$emp_id' AND password = '$pass'  ";
+    $query = "Select * From user_profile where aadhar_id = '$aadhar_id' AND password = '$password'  ";
     
     $result = mysqli_query($conn,$query) or die("error in fetching");
     if(mysqli_num_rows($result)==1)
     {
-        return 1;
+        $row = mysql_fetch_assoc($result);
+        $emp_type = $row['emp_type'];
+        return $emp_type;
     }
 	else
     {
@@ -31,14 +33,14 @@ function verify_user($emp_id,$pass)
 	mysqli_close();
     
 }
-
+*/
 
 
 //Check if user is already registered
-function check_user($emp_id)
+function check_user($aadhar_id)
 {   include'./dbconnect.php';
 
-	$query = " Select * From user_profile where emp_id = '$emp_id' ";
+	$query = " Select * From user_profile where aadhar_id = '$aadhar_id' ";
 		
 	$result = mysqli_query($conn,$query);
     
@@ -83,17 +85,17 @@ function check_white_list($user_type,$name,$emp_id)
 
 //Register new user
 
-function register_new_user($user_type,$name,$mob_no,$emp_id,$area_pin,$center_id,$pswd)
+function register_new_user($aadhar_id,$emp_type,$name,$mobile_no,$center_id,$area_id,$password)
 {
 	include'./dbconnect.php';
 	
-    $query = "INSERT INTO `user_profile` (`emp_id`, `user_type`, `user_name`, `mobile_no`, `center_id`, `area_pin`,`password`) 
-    VALUES ('$emp_id', '$user_type', '$name', '$mob_no', '$center_id', '$area_pin','$pswd')";
+    $query = "INSERT INTO `user_profile`(`aadhar_id`, `emp_type`, `name`, `mobile_no`, `center_id`, `area_id`, `password`)
+     VALUES ('$aadhar_id','$emp_type','$name','$mobile_no','$center_id','$area_id','$password')";
     
     mysqli_query($conn,$query);
 
     if(mysqli_affected_rows($conn)==1)
-       {
+       {    
            return 1;
        //Insertion successfull to database
        }
