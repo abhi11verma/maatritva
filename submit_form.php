@@ -19,6 +19,7 @@ header("Content-Type:application/json");
 
 $request = $_GET['data'];
 
+//$request = '[{"Name":"","GPS_latitude":1,"GPS_longitude":2,"GPS_Altitude":3,"multi_preg":"1","headache_bluryvision":"NA","vaginal_bleeding":"YES","anaemia":"YES","bp_systolic":"21","bp_diastolic":"21","mean_arterial_pressure":"21","pulse_rate":"221","Height_mtr":"15","Curr_weight":"54","BMI":"2400","ANM_ID":123455,"form_id":"1469974284583_123455","edema":"YES","HIV":"YES"}]';
 
 //[{"Name":"","GPS_latitude":1,"GPS_longitude":2,"GPS_Altitude":3,"multi_preg":"1","headache_bluryvision":"NO","vaginal_bleeding":"NA","anaemia":"NA","bp_systolic":"212","bp_diastolic":"21","mean_arterial_pressure":"85","pulse_rate":"21","Height_mtr":"554","Curr_weight":"5","BMI":"0.16","ANM_ID":123455,"form_id":"1469973972899_123455","edema":"YES","HIV":"YES"}]
 
@@ -88,7 +89,7 @@ $form_id = $json[0]['form_id'];
 	$query = " INSERT INTO `pw_reg`(`Name`, `MCTSID`, `DOB`, `Age`, `Address`, `Landmark`, `area_id`, `pw_ph_no`, `GPS_latitude`, `GPS_longitude`, `GPS_Altitude`, `LMP`, `still_birth`, `low_birth_weight`, `miscarriage`, `blood_loss`, `ANC_visit_no`, `preg_count`, `preg_mnth`, `primigravida`, `last_preg_gap`, `pih_mother_sister`, `diabetes_mother_sister`, `prior_pih`, `med_diagnosis`, `multi_preg`, `c_sec`, `edema`, `headache_bluryvision`, `vaginal_bleeding`, `bp_systolic`, `bp_diastolic`, `mean_arterial_pressure`, `pulse_rate`, `Height_mtr`, `Curr_weight`, `BMI`, `anaemia`, `HIV`, `ANM_ID`, `form_id`) 
 	VALUES ('$Name', '$MCTSID', '$DOB', '$Age', '$Address', '$Landmark', '$area_id', '$pw_ph_no', '$GPS_latitude', '$GPS_longitude', '$GPS_Altitude', '$LMP', '$still_birth', '$low_birth_weight', '$miscarriage', '$blood_loss', '$ANC_visit_no', '$preg_count', '$preg_mnth', '$primigravida', '$last_preg_gap', '$pih_mother_sister', '$diabetes_mother_sister', '$prior_pih', '$med_diagnosis', '$multi_preg', '$c_sec', '$edema', '$headache_bluryvision', '$vaginal_bleeding', '$bp_systolic', '$bp_diastolic', '$mean_arterial_pressure', '$pulse_rate', '$Height_mtr', '$Curr_weight', '$BMI', '$anaemia', '$HIV', '$ANM_ID', '$form_id')";
 
-	 //echo $query;
+	//echo $query;
 		
 	$result = mysqli_query($conn,$query);
     
