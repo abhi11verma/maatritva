@@ -2,53 +2,52 @@
 
 CREATE OR REPLACE VIEW `v_pw_details` AS 
 select
-`v_pw_case_latest_status`.`system_risk_status` AS `system_risk_status`,
-`v_pw_case_latest_status`.`visit_status` AS `visit_status`,
- pw.`Name` AS  `Name`,
-pw.`MCTSID` AS  `MCTSID`,
-pw.`DOB` AS  `DOB`,
-pw.`Age` AS  `Age`,
-pw.`Socio_Eco_Status` AS  `Socio_Eco_Status`,
-pw.`Address` AS  `Address`,
-pw.`Landmark` AS  `Landmark`,
-pw.`area_id` AS  `area_id`,
+`v_latest_pw_case_status`.`risk_status` AS `risk_status`,
+`v_latest_pw_case_status`.`case_status` AS `case_status`,
 area.area_name AS Area,
-pw.`pw_ph_no` AS  `pw_ph_no`,
-pw.`GPS_latitude` AS  `GPS_latitude`,
-pw.`GPS_longitude` AS  `GPS_longitude`,
-pw.`GPS_Altitude` AS  `GPS_Altitude`,
-pw.`LMP` AS  `LMP`,
-pw.`ANC_visit_no` AS  `ANC_visit_no`,
-pw.`preg_count` AS  `preg_count`,
-pw.`succ_preg_count` AS  `succ_preg_count`,
-pw.`preg_mnth` AS  `preg_mnth`,
-pw.`doc_visit` AS  `doc_visit`,
-pw.`primigravida` AS  `primigravida`,
-pw.`nulloparous` AS  `nulloparous`,
-pw.`last_preg_gap` AS  `last_preg_gap`,
-pw.`pih_mother` AS  `pih_mother`,
-pw.`have_sister` AS  `have_sister`,
-pw.`pih_sister` AS  `pih_sister`,
-pw.`prior_pih` AS  `prior_pih`,
-pw.`last_preg_status` AS  `last_preg_status`,
-pw.`med_diagnosis` AS  `med_diagnosis`,
-pw.`IVF_his` AS  `IVF_his`,
-pw.`chronic_bp` AS  `chronic_bp`,
-pw.`Diabetes_his` AS  `Diabetes_his`,
-pw.`c_sec` AS  `c_sec`,
-pw.`edema` AS  `edema`,
-pw.`multiparous` AS  `multiparous`,
-pw.`nausea_vomiting` AS  `nausea_vomiting`,
-pw.`bp_systolic` AS  `bp_systolic`,
-pw.`bp_diastolic` AS  `bp_diastolic`,
-pw.`mean_arterial_pressure` AS  `mean_arterial_pressure`,
-pw.`pulse_rate` AS  `pulse_rate`,
-pw.`Height_mtr` AS  `Height_mtr`,
-pw.`Curr_weight` AS  `Curr_weight`,
-pw.`BMI` AS  `BMI`,
+pw. `Name`AS `Name`,
+pw. `MCTSID`AS `MCTSID`,
+pw. `DOB`AS `DOB`,
+pw. `Age`AS `Age`,
+pw. `Address`AS `Address`,
+pw. `Landmark`AS `Landmark`,
+pw. `area_id`AS `area_id`,
+pw. `pw_ph_no`AS `pw_ph_no`,
+pw. `GPS_latitude`AS `GPS_latitude`,
+pw. `GPS_longitude`AS `GPS_longitude`,
+pw. `GPS_Altitude`AS `GPS_Altitude`,
+pw. `LMP`AS `LMP`,
+pw. `still_birth`AS `still_birth`,
+pw. `low_birth_weight`AS `low_birth_weight`,
+pw. `miscarriage`AS `miscarriage`,
+pw. `blood_loss`AS `blood_loss`,
+pw. `ANC_visit_no`AS `ANC_visit_no`,
+pw. `preg_count`AS `preg_count`,
+pw. `preg_mnth`AS `preg_mnth`,
+pw. `primigravida`AS `primigravida`,
+pw. `last_preg_gap`AS `last_preg_gap`,
+pw. `pih_mother_sister`AS `pih_mother_sister`,
+pw. `diabetes_mother_sister`AS `diabetes_mother_sister`,
+pw. `prior_pih`AS `prior_pih`,
+pw. `med_diagnosis`AS `med_diagnosis`,
+pw. `multi_preg`AS `multi_preg`,
+pw. `c_sec`AS `c_sec`,
+pw. `edema`AS `edema`,
+pw. `headache_bluryvision`AS `headache_bluryvision`,
+pw. `vaginal_bleeding`AS `vaginal_bleeding`,
+pw. `bp_systolic`AS `bp_systolic`,
+pw. `bp_diastolic`AS `bp_diastolic`,
+pw. `mean_arterial_pressure`AS `mean_arterial_pressure`,
+pw. `pulse_rate`AS `pulse_rate`,
+pw. `Height_mtr`AS `Height_mtr`,
+pw. `Curr_weight`AS `Curr_weight`,
+pw. `BMI`AS `BMI`,
+pw. `anaemia`AS `anaemia`,
+pw. `HIV`AS `HIV`,
+pw. `ANM_ID`AS `ANM_ID`,
 timestampdiff(MONTH,`pw`.`LMP`,curdate())+1 AS `month_of_preg`,
-date_format(cast(`v_pw_case_latest_status`.`Time_stamp` as date),'%e-%c-%Y') AS `Time_stamp` 
-from (`pw_reg` `pw` left join `v_pw_case_latest_status` on((`pw`.`MCTSID` = `v_pw_case_latest_status`.`MCTS_ID`)))
+date_format(cast(`v_latest_pw_case_status`.`next_visit_date` as date),'%e-%c-%Y') AS `DUE_DATE` 
+from (`pw_reg` `pw` left join `v_latest_pw_case_status` on((`pw`.`MCTSID` = `v_latest_pw_case_status`.`MCTSID`)))
 join area_details area on area.area_id = pw.area_id
 
 -- ======================================================================================================
@@ -104,4 +103,39 @@ summary report query
  union
  select 'pw_visited' AS label , count(*) as count from v_pw_case_latest_status where visit_status = "VISITED" AND  area_id IN (select emp.area_id from emp_area emp WHERE emp.emp_id = '$emp_id')
 
-select emp.area_id from emp_area emp WHERE emp.emp_id = '$emp_id'
+==========================================================================================
+
+CREATE VIEW v_latest_case_status_MO AS
+SELECT pw.*,DATEDIFF(pw.next_visit_date,current_date()) as days FROM `pw_case_update_mo` pw 
+WHERE CONCAT(MCTSID,`Form_entry_time`) IN (SELECT CONCAT(mo.MCTSID,max(mo.Form_entry_time)) FROM pw_case_update_mo mo group by mo.MCTSID)
+===========================================================================================
+
+
+CREATE OR REPLACE VIEW `v_latest_pw_case_status` AS 
+select `pw_case_status`.`rec_id` AS `rec_id`,
+`pw_case_status`.`MCTSID` AS `MCTSID`,
+pw_reg.area_id AS area_id,
+`pw_case_status`.`case_status` AS `case_status`,
+`pw_case_status`.`risk_status` AS `risk_status`,
+`pw_case_status`.`updated_by` AS `updated_by`,
+`pw_case_status`.`risk_reason` AS `risk_reason`,
+`pw_case_status`.`next_visit_date` AS `next_visit_date`,
+`pw_case_status`.`remark` AS `remark`,
+`pw_case_status`.`Time_stamp` AS `Time_stamp` 
+from `pw_case_status` left join pw_reg on pw_case_status.MCTSID = pw_reg.MCTSID
+where concat(`pw_case_status`.`MCTSID`,`pw_case_status`.`Time_stamp`) in (select concat(`pw_case_status`.`MCTSID`,max(`pw_case_status`.`Time_stamp`)) 
+from `pw_case_status` group by `pw_case_status`.`MCTSID`)
+
+==========================================================================================
+-- query for getting summarised result according to employee id
+ select `v_latest_pw_case_status`.`risk_status` AS `label`,
+ count(*) AS `count` 
+ from `v_latest_pw_case_status`  where area_id IN (select emp.area_id from emp_area emp WHERE emp.emp_id = 'ANM1') group by `v_latest_pw_case_status`.`risk_status` 
+
+ union 
+ select 'Total_pw' AS `label`,count(*) AS `count` from `v_latest_pw_case_status` where area_id IN (select emp.area_id from emp_area emp WHERE emp.emp_id = 'ANM1')
+ union
+ select 'pw_due_for_visit' AS label , count(*) as count from v_latest_pw_case_status where (case_status = 'DUE' OR case_status = 'VISITED_NEXT_DATE') AND  area_id IN (select emp.area_id from emp_area emp WHERE emp.emp_id = 'ANM1')
+ union
+ select 'pw_visited' AS label , count(*) as count from v_latest_pw_case_status where case_status = 'VISITED' AND  area_id IN (select emp.area_id from emp_area emp WHERE emp.emp_id = 'ANM1')
+ 

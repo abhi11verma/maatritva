@@ -96,7 +96,7 @@ function register_new_user($aadhar_id,$emp_type,$name,$mobile_no,$center_id,$are
 
     if(mysqli_affected_rows($conn)==1)
        {    
-           return 1;
+           return mysqli_insert_id($conn);
        //Insertion successfull to database
        }
        else{
@@ -105,5 +105,6 @@ function register_new_user($aadhar_id,$emp_type,$name,$mobile_no,$center_id,$are
        }
     mysqli_close();
 }
+
 
 ?>

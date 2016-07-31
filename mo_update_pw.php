@@ -36,16 +36,24 @@ $Remark = $json[0]['Remark'];
 
 //===================================================================================
 
+if($next_visit_date == "")
+{
+	$case_status = 1; //'1 =VISITED', 2 ='VISITED_NEXT_DATE', 'DUE', 'CLOSE
+}
+else{
+	$case_status = 2;
+}
+
+
 	//echo "Executing query";
 	
 	//Submit form to database
 	include'./dbconnect.php';
 
-	$query = "INSERT INTO `pw_case_update_mo`(`MCTSID`, `risk_status`, `form_id`, `emp_id`, `next_visit_date`, `Remark`) 
-    VALUES ('$MCTSID','$risk_status','$form_id','$emp_id','$next_visit_date','$Remark')";
+	$query = "INSERT INTO `pw_case_status`(`MCTSID`, `case_status`, `risk_status`, `updated_by`, `next_visit_date`,`remark`)
+	 VALUES ('$MCTSID','$case_status','$risk_status','$emp_id','$next_visit_date','$Remark')";
 
 	//echo $query;
-		
 	$result = mysqli_query($conn,$query);
     
     if(mysqli_affected_rows($conn) ==1 )

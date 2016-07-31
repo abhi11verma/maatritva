@@ -22,6 +22,8 @@ $request = $_GET['data'];// get data from Json call
 
 $json = json_decode($request); // decode json
 
+$emp_ar= array(" ","ANM","MO","Gynac");
+
 if(!empty($json->aadhar_id))
 {
 	
@@ -33,7 +35,7 @@ if(!empty($json->aadhar_id))
 	$center_id = $json->center_id;
 	$area_id = $json->area_id;
     $password = $json->pass;
-	
+
 	//check if user already registerd
 	$x=check_user($aadhar_id);
 	 if($x)//user already registered
@@ -53,13 +55,16 @@ elseif(!check_white_list($user_type,$name,$emp_id)) // check if user is in white
 */
 else{
 		 //Register new user
-		 if(register_new_user($aadhar_id,$emp_type,$name,$mobile_no,$center_id,$area_id,$password)) //Registered succefully
-		 {
-			 deliver_response(200,'Registered_Successfully',1);
+		 if(($id = register_new_user($aadhar_id,$emp_type,$name,$mobile_no,$center_id,$area_id,$password))) //Registered succefully
+		 {		
+			 //$emp_id = $emp_type.$id;
+			 //define type of anm and generate id
+			$emp_id = $emp_ar[$emp_type].$id;
+			 deliver_response(200,'Registered_Successfully',1,$emp_id);
 			 exit();
 		 }
 		 else{                                                                             //Error while registering
-			 deliver_response(201,'Error_Registering',0);
+			 deliver_response(201,'Error_Registering',0," ");
 			 exit();
 		 }
 		 
@@ -89,13 +94,14 @@ else{
 //====================Webservice funcitons===========================
 
 //Function to reply to webservice call
-function deliver_response($status_code,$status_message,$result_code)
+function deliver_response($status_code,$status_message,$result_code,$emp_id)
 {
 	header("HTTP/1.1 $status_code $status_message");
 	
 	$response['status_code']=$status_code;
 	$response['status_message']=$status_message;
 	$response['result_code'] = $result_code;
+	$response['emp_id'] = $emp_id;
 	
 	$json_response = json_encode($response);
 	echo $json_response;
