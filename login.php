@@ -41,8 +41,8 @@ if(!(empty($json->aadhar_id)||empty($json->pass)))
     if(mysqli_num_rows($result)==1)
     {
         
-        // deliver_response(200,'Success',1,$emp_type,$emp_id);
-		 deliver_response(200,'Success',1," "," ");
+         deliver_response(200,'Success',1,$emp_type,$emp_id);
+		// deliver_response(200,'Success',1," "," ");
     }
 	else
     {

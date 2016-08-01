@@ -28,11 +28,13 @@ if(!empty($json[0]['form_id']))
 	
 //===================================================================================
 $MCTSID = $json[0]['MCTSID'];
+
 $risk_status = $json[0]['risk_status'];
-$form_id = $json[0]['form_id'];
-$emp_id = $json[0]['emp_id'];
+$updated_by = $json[0]['emp_id'];
+//$risk_reason = $json[0]['risk_reason'];
 $next_visit_date = $json[0]['next_visit_date'];
 $Remark = $json[0]['Remark'];
+$form_id = $json[0]['form_id'];
 
 //===================================================================================
 
@@ -51,7 +53,7 @@ else{
 	include'./dbconnect.php';
 
 	$query = "INSERT INTO `pw_case_status`(`MCTSID`, `case_status`, `risk_status`, `updated_by`, `next_visit_date`,`remark`)
-	 VALUES ('$MCTSID','$case_status','$risk_status','$emp_id','$next_visit_date','$Remark')";
+	 VALUES ('$MCTSID','$case_status','$risk_status','$updated_by','$next_visit_date','$Remark')";
 
 	//echo $query;
 	$result = mysqli_query($conn,$query);

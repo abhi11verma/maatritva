@@ -76,7 +76,7 @@ $Curr_weight= $json[0]['Curr_weight'];
 $BMI= $json[0]['BMI'];
 $anaemia= $json[0]['anaemia'];
 $HIV= $json[0]['HIV'];
-$ANM_ID= $json[0]['ANM_ID'];
+$ANM_ID= $json[0]['emp_id'];
 $form_id = $json[0]['form_id'];
  //===================================================================================
 

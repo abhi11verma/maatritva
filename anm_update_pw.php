@@ -6,21 +6,25 @@ Use following format to consume this webservice.
 ================================================================================
 */
 
+if($_SERVER['REQUEST_METHOD'] == 'OPTIONS')
+{
+  //header('Access-Control-Allow-Origin: null');
+  header('Access-Control-Allow-Headers: Content-type');
+  header("HTTP/1.1 200 OK");
+  die();
+}
+
 header("Content-Type:application/json");
 //include("./function.php");
 
 $request = $_GET['data'];
-//$request = '[{"MCTSID":"mcts_id_test1","GPS_latitude":"latitude","GPS_longitude":"longitude","GPS_Altitude":"altitude","ANC_visit_no":"1","edema":"YES","nausea_vomiting":"YES","bp_systolic":"140","bp_diastolic":"85","pulse_rate":"75","ANM_ID":"123","Remark":"hello world","Form_entry_time":1469445069551, "form_id":32165}]';
-
 //echo $request;
+//$request ='[{"MCTSID":"123","GPS_latitude":"latitude","GPS_longitude":"longitude","GPS_Altitude":"altitude","preg_mnth":"3","ANC_visit_no":"3","edema":"1","multi_preg":"1","bp_systolic":"100","bp_diastolic":"21","pulse_rate":"54","Curr_weight":"21","form_id":"1469987352490_undefined","Remark":"","headache_bluryvision":"1","vaginal_bleeding":"1","anaemia":"1"}]';
+
 $json = json_decode($request,true);
+
 //print_r($json);
 
-/*
-$json = array('MCTSID' => '7777','GPS_latitude' => '20','GPS_longitude' => '20','GPS_Altitude' => '21','ANC_visit_no' => '6',
-'edema' => 'YES','nausea_vomiting' => 'YES','bp_systolic' => '142','bp_diastolic' => '82','mean_arterial_pressure' => '36',
-'pulse_rate' => '98','Curr_weight' => '60','ANM_ID' => '32658','form_id' => 'THISTEST_XYZ','Remark' => 'this is update test');
-*/
 //Check value if empty
 if(!empty($json[0]['form_id']))
 {
@@ -30,18 +34,22 @@ $MCTSID = $json[0]['MCTSID'];
 $GPS_latitude = $json[0]['GPS_latitude'];
 $GPS_longitude = $json[0]['GPS_longitude'];
 $GPS_Altitude = $json[0]['GPS_Altitude'];
+$preg_mnth= $json[0]['preg_mnth'];
 $ANC_visit_no = $json[0]['ANC_visit_no'];
+$multi_preg= $json[0]['multi_preg'];
 $edema = $json[0]['edema']; 
-$nausea_vomiting = $json[0]['nausea_vomiting'];
+$headache_bluryvision= $json[0]['headache_bluryvision'];
+$vaginal_bleeding= $json[0]['vaginal_bleeding'];
 $bp_systolic = $json[0]['bp_systolic'];
 $bp_diastolic = $json[0]['bp_diastolic'];
 $mean_arterial_pressure = $json[0]['mean_arterial_pressure'];
 $pulse_rate = $json[0]['pulse_rate'];
 $Curr_weight = $json[0]['Curr_weight'];
-$ANM_ID = $json[0]['ANM_ID'];
+$anaemia= $json[0]['anaemia'];
+$HIV= $json[0]['HIV'];
+$ANM_ID = $json[0]['emp_id'];
 $form_id = $json[0]['form_id'];
 $Remark = $json[0]['Remark'];
-//$Form_entry_time = $json['Form_entry_time'];
 
 //===================================================================================
 
@@ -50,11 +58,8 @@ $Remark = $json[0]['Remark'];
 	//Submit form to database
 	include'./dbconnect.php';
 
-	$query = "INSERT INTO `pw_case_update_anm`
-    (`MCTSID`, `GPS_latitude`, `GPS_longitude`, `GPS_Altitude`, `ANC_visit_no`, `edema`, `nausea_vomiting`, `bp_systolic`, 
-    `bp_diastolic`, `mean_arterial_pressure`, `pulse_rate`, `Curr_weight`, `ANM_ID`, `form_id`, `Remark`) 
-    VALUES ('$MCTSID', '$GPS_latitude', '$GPS_longitude', '$GPS_Altitude', '$ANC_visit_no', '$edema', '$nausea_vomiting', '$bp_systolic', 
-    '$bp_diastolic', '$mean_arterial_pressure', '$pulse_rate', '$Curr_weight', '$ANM_ID', '$form_id', '$Remark')";
+	$query = " INSERT INTO pw_case_update_anm (`MCTSID`, `GPS_latitude`, `GPS_longitude`, `GPS_Altitude`, `preg_mnth`, `ANC_visit_no`, `multi_preg`, `edema`, `headache_bluryvision`, `vaginal_bleeding`, `bp_systolic`, `bp_diastolic`, `mean_arterial_pressure`, `pulse_rate`, `Curr_weight`, `anaemia`, `HIV`, `ANM_ID`, `form_id`, `Remark`) 
+VALUES ('$MCTSID', '$GPS_latitude', '$GPS_longitude', '$GPS_Altitude', '$preg_mnth', '$ANC_visit_no', '$multi_preg', '$edema', '$headache_bluryvision', '$vaginal_bleeding', '$bp_systolic', '$bp_diastolic', '$mean_arterial_pressure', '$pulse_rate', '$Curr_weight', '$anaemia', '$HIV', '$ANM_ID', '$form_id', '$Remark')";
 
 	//echo $query;
 		
@@ -66,7 +71,7 @@ $Remark = $json[0]['Remark'];
     }
 	else
     {
-        deliver_response(200,"Some Error",2);
+        deliver_response(400,"Database Error",2);
     }
 	
 	mysqli_close($conn);
