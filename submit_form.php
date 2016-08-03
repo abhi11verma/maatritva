@@ -19,7 +19,7 @@ header("Content-Type:application/json");
 
 $request = $_GET['data'];
 
-//$request = '[{"Name":"","GPS_latitude":1,"GPS_longitude":2,"GPS_Altitude":3,"multi_preg":"1","headache_bluryvision":"NA","vaginal_bleeding":"YES","anaemia":"YES","bp_systolic":"21","bp_diastolic":"21","mean_arterial_pressure":"21","pulse_rate":"221","Height_mtr":"15","Curr_weight":"54","BMI":"2400","ANM_ID":123455,"form_id":"1469974284583_123455","edema":"YES","HIV":"YES"}]';
+//$request = '[{"Name":"po","DOB":"2016-08-17","Age":"","Address":"kjk","Landmark":"kj","pw_ph_no":"65","MCTSID":"54","area_id":"1","LMP":"2016-08-04","ANC_visit_no":"1","primigravida":"NO","still_birth":"NA","last_preg_gap":"1","low_birth_weight":"NO","miscarriage":"NO","blood_loss":"NO","prior_pih":"NO","pih_mother_sister":"NO","med_diagnosis":"1","diabetes_mother_sister":"NO","multi_preg":"1","headache_bluryvision":"NO","vaginal_bleeding":"NA","anaemia":"NO","bp_systolic":"21","bp_diastolic":"21","mean_arterial_pressure":"21","pulse_rate":"21","Height_mtr":"2","Curr_weight":"121","BMI":"302500","ANM_ID":123455,"form_id":"1470230249612_123455","edema":"YES","preg_count":"1","HIV":"NA","preg_mnth":"1","c_sec":"NO"}]';
 
 //[{"Name":"","GPS_latitude":1,"GPS_longitude":2,"GPS_Altitude":3,"multi_preg":"1","headache_bluryvision":"NO","vaginal_bleeding":"NA","anaemia":"NA","bp_systolic":"212","bp_diastolic":"21","mean_arterial_pressure":"85","pulse_rate":"21","Height_mtr":"554","Curr_weight":"5","BMI":"0.16","ANM_ID":123455,"form_id":"1469973972899_123455","edema":"YES","HIV":"YES"}]
 
@@ -101,13 +101,22 @@ $form_id = $json[0]['form_id'];
     {
         deliver_response(400,"Database error",2);
     }
-	
+
 	mysqli_close($conn);
 
-/*
+	include'./dbconnect.php';
+	$query2 = "INSERT INTO pw_case_update(`MCTSID`, `GPS_latitude`, `GPS_longitude`, `GPS_Altitude`, `preg_mnth`, `ANC_visit_no`, `multi_preg`, `edema`, `headache_bluryvision`, `vaginal_bleeding`, `bp_systolic`, `bp_diastolic`, `mean_arterial_pressure`, `pulse_rate`, `Curr_weight`, `anaemia`, `HIV`, `ANM_ID`, `form_id`, `Remark`) 
+	VALUES ('$MCTSID', '$GPS_latitude', '$GPS_longitude', '$GPS_Altitude', '$preg_mnth', '$ANC_visit_no', '$multi_preg', '$edema', '$headache_bluryvision', '$vaginal_bleeding', '$bp_systolic', '$bp_diastolic', '$mean_arterial_pressure', '$pulse_rate', '$Curr_weight', '$anaemia', '$HIV', '$ANM_ID', '$form_id', 'First_record')";
+	
+	mysqli_query($conn,$query2);
+
+	mysqli_close($conn);
+
+
 	//====================Processing script=============================
 	$risk_stat = 2; //1=SYS_AT_RISK,2=SYS_NORMAL
-
+	$risk_reason = array();
+/*
 	if($Age<18 OR $Age >30) //************************
 	{
 		$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
@@ -143,8 +152,8 @@ $form_id = $json[0]['form_id'];
 		$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
 		$risk_reason[] = $med_diagnosis;
 	}
-
-	if($pih_mother == "YES" OR $pih_sister == "YES")//***********Previous family history
+*/
+	if($pih_mother_sister == "YES")//***********Previous family history
 	{
 		$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
 		$risk_reason[] = "Family History";
@@ -163,7 +172,7 @@ $form_id = $json[0]['form_id'];
 	{
 		$case_status = 3; 
 	}
-	
+
 	// ************************* store in the data base.*********************
 	include'./dbconnect.php';
 	
@@ -174,7 +183,7 @@ $form_id = $json[0]['form_id'];
 
 	mysqli_close($conn);
 	//*******************************Upata database****************************
-*/
+
 }//Function to execute if form id is avvailable
 
 else{//if form id is not available then execute this block and return invalid request

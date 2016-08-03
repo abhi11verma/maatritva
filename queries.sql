@@ -21,34 +21,34 @@ pw. `still_birth`AS `still_birth`,
 pw. `low_birth_weight`AS `low_birth_weight`,
 pw. `miscarriage`AS `miscarriage`,
 pw. `blood_loss`AS `blood_loss`,
-pw. `ANC_visit_no`AS `ANC_visit_no`,
+pw_updated. `ANC_visit_no`AS `ANC_visit_no`,
 pw. `preg_count`AS `preg_count`,
-pw. `preg_mnth`AS `preg_mnth`,
+pw_updated. `preg_mnth`AS `preg_mnth`,
 pw. `primigravida`AS `primigravida`,
 pw. `last_preg_gap`AS `last_preg_gap`,
 pw. `pih_mother_sister`AS `pih_mother_sister`,
 pw. `diabetes_mother_sister`AS `diabetes_mother_sister`,
 pw. `prior_pih`AS `prior_pih`,
 pw. `med_diagnosis`AS `med_diagnosis`,
-pw. `multi_preg`AS `multi_preg`,
+pw_updated. `multi_preg`AS `multi_preg`,
 pw. `c_sec`AS `c_sec`,
-pw. `edema`AS `edema`,
-pw. `headache_bluryvision`AS `headache_bluryvision`,
-pw. `vaginal_bleeding`AS `vaginal_bleeding`,
-pw. `bp_systolic`AS `bp_systolic`,
-pw. `bp_diastolic`AS `bp_diastolic`,
-pw. `mean_arterial_pressure`AS `mean_arterial_pressure`,
-pw. `pulse_rate`AS `pulse_rate`,
+pw_updated. `edema`AS `edema`,
+pw_updated. `headache_bluryvision`AS `headache_bluryvision`,
+pw_updated. `vaginal_bleeding`AS `vaginal_bleeding`,
+pw_updated. `bp_systolic`AS `bp_systolic`,
+pw_updated. `bp_diastolic`AS `bp_diastolic`,
+pw_updated. `mean_arterial_pressure`AS `mean_arterial_pressure`,
+pw_updated. `pulse_rate`AS `pulse_rate`,
 pw. `Height_mtr`AS `Height_mtr`,
-pw. `Curr_weight`AS `Curr_weight`,
+pw_updated. `Curr_weight`AS `Curr_weight`,
 pw. `BMI`AS `BMI`,
-pw. `anaemia`AS `anaemia`,
-pw. `HIV`AS `HIV`,
+pw_updated. `anaemia`AS `anaemia`,
+pw_updated. `HIV`AS `HIV`,
 pw. `ANM_ID`AS `ANM_ID`,
 timestampdiff(MONTH,`pw`.`LMP`,curdate())+1 AS `month_of_preg`,
 date_format(cast(`v_latest_pw_case_status`.`next_visit_date` as date),'%e-%c-%Y') AS `DUE_DATE` 
 from (`pw_reg` `pw` left join `v_latest_pw_case_status` on((`pw`.`MCTSID` = `v_latest_pw_case_status`.`MCTSID`)))
-join area_details area on area.area_id = pw.area_id
+join area_details area on area.area_id = pw.area_id left join v_latest_pw_case_update pw_updated on pw.MCTSID = pw_updated.MCTSID
 
 -- ======================================================================================================
 
@@ -139,3 +139,11 @@ from `pw_case_status` group by `pw_case_status`.`MCTSID`)
  union
  select 'pw_visited' AS label , count(*) as count from v_latest_pw_case_status where case_status = 'VISITED' AND  area_id IN (select emp.area_id from emp_area emp WHERE emp.emp_id = 'ANM1')
  
+ ===========================================================================================
+ -- query for getting latest pw_updated record
+ 
+CREATE OR REPLACE VIEW `v_latest_pw_case_update` AS 
+select pw_case_update.* 
+from `pw_case_update` where concat(`pw_case_update`.`MCTSID`,`pw_case_update`.`Form_entry_time`) in (select concat(`pw_case_update`.`MCTSID`,max(`pw_case_update`.`Form_entry_time`)) 
+from `pw_case_update` group by `pw_case_update`.`MCTSID`)
+===========================================================================================

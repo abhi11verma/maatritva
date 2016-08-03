@@ -59,7 +59,15 @@ else{
 		 {		
 			 //$emp_id = $emp_type.$id;
 			 //define type of anm and generate id
-			$emp_id = $emp_ar[$emp_type].$id;
+			 $emp_id = $emp_ar[$emp_type].$id;
+
+			 //update employee id in tables too--------
+			 include'./dbconnect.php';
+	
+    		$query2 = "update user_profile SET emp_id = '$emp_id' WHERE rec_id = $id ";
+        	mysqli_query($conn,$query2);
+			mysqli_close($conn);
+
 			 deliver_response(200,'Registered_Successfully',1,$emp_id);
 			 exit();
 		 }
