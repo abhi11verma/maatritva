@@ -67,6 +67,11 @@ $pih_mother_sister= $json[0]['pih_mother_sister'];
 $diabetes_mother_sister= $json[0]['diabetes_mother_sister'];
 $prior_pih= $json[0]['prior_pih'];
 $med_diagnosis= $json[0]['med_diagnosis'];
+if($med_diagnosis == ",NONE OF THESE")
+{
+	$med_diagnosis = " ";
+}
+
 $multi_preg= $json[0]['multi_preg'];
 $c_sec= $json[0]['c_sec'];
 $edema= $json[0]['edema'];
@@ -107,11 +112,12 @@ $form_id = $json[0]['form_id'];
         deliver_response(400,"Database error",2);
     }
 
+	$PWID = mysqli_insert_id($conn);
 	mysqli_close($conn);
 
 	include'./dbconnect.php';
-	$query2 = "INSERT INTO pw_case_update(`MCTSID`, `GPS_latitude`, `GPS_longitude`, `GPS_Altitude`, `preg_mnth`, `ANC_visit_no`, `multi_preg`, `edema`, `headache_bluryvision`, `vaginal_bleeding`, `bp_systolic`, `bp_diastolic`, `mean_arterial_pressure`, `pulse_rate`, `Curr_weight`, `anaemia`, `HIV`, `ANM_ID`, `form_id`, `Remark`) 
-	VALUES ('$MCTSID', '$GPS_latitude', '$GPS_longitude', '$GPS_Altitude', '$preg_mnth', '$ANC_visit_no', '$multi_preg', '$edema', '$headache_bluryvision', '$vaginal_bleeding', '$bp_systolic', '$bp_diastolic', '$mean_arterial_pressure', '$pulse_rate', '$Curr_weight', '$anaemia', '$HIV', '$ANM_ID', '$form_id', 'First_record')";
+	$query2 = "INSERT INTO pw_case_update(`PWID`, `GPS_latitude`, `GPS_longitude`, `GPS_Altitude`, `preg_mnth`, `ANC_visit_no`, `multi_preg`, `edema`, `headache_bluryvision`, `vaginal_bleeding`, `bp_systolic`, `bp_diastolic`, `mean_arterial_pressure`, `pulse_rate`, `Curr_weight`, `anaemia`, `HIV`, `ANM_ID`, `form_id`, `Remark`) 
+	VALUES ('$PWID','$GPS_latitude', '$GPS_longitude', '$GPS_Altitude', '$preg_mnth', '$ANC_visit_no', '$multi_preg', '$edema', '$headache_bluryvision', '$vaginal_bleeding', '$bp_systolic', '$bp_diastolic', '$mean_arterial_pressure', '$pulse_rate', '$Curr_weight', '$anaemia', '$HIV', '$ANM_ID', '$form_id', 'First_record')";
 	
 	mysqli_query($conn,$query2);
 
@@ -150,13 +156,13 @@ $form_id = $json[0]['form_id'];
 	if($headache_bluryvision == "YES")
 	{
 		$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-		$risk_reason[] = "headache_bluryvision";
+		$risk_reason[] = "Headache bluryvision";
 	}
 
 	if($vaginal_bleeding=="YES")
 	{
 		$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-		$risk_reason[] = "vaginal_bleeding";
+		$risk_reason[] = "Vaginal bleeding";
 
 	}
 
@@ -165,35 +171,35 @@ $form_id = $json[0]['form_id'];
 		if($prior_pih == "YES")
 		{
 			$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-			$risk_reason[] = "prior_pih";
+			$risk_reason[] = "Prior PIH";
 		}
 		if($still_birth == "YES")
 		{
 			$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-			$risk_reason[] = "still_birth";
+			$risk_reason[] = "Still Birth";
 		}
 		if($low_birth_weight == "YES")
 		{
 			$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-			$risk_reason[] = "low_birth_weight";
+			$risk_reason[] = "Low Birth Weight";
 
 		}
 		if($miscarriage == "YES")
 		{
 			$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-			$risk_reason[] = "miscarriage";
+			$risk_reason[] = "Miscarriage";
 
 		}
 		if($c_sec == "YES")
 		{
 			$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-			$risk_reason[] = "c_sec";
+			$risk_reason[] = "C- Section";
 
 		}
 		if($blood_loss == "YES")
 		{
 			$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-			$risk_reason[] = "blood_loss";
+			$risk_reason[] = "Blood Loss";
 
 		}
 
@@ -202,7 +208,7 @@ $form_id = $json[0]['form_id'];
 
 
 	
-	if(!($med_diagnosis == ",NONE OF THESE")) //***********other medical history
+	if(!($med_diagnosis == " ")) //***********other medical history
 	{
 		$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
 		$risk_reason[] = $med_diagnosis;
@@ -253,12 +259,12 @@ $form_id = $json[0]['form_id'];
 	if($anaemia == "YES")
 	{
 		$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-		$risk_reason[] = "anaemia";
+		$risk_reason[] = "Anaemia";
 	}
-	if($multi_preg == "YES")
+	if(!($multi_preg == "NO"))
 	{
 		$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-		$risk_reason[] = "multi pregnant";
+		$risk_reason[] = "Multi pregnant";
 	}
 
 
@@ -274,8 +280,8 @@ $form_id = $json[0]['form_id'];
 	// ************************* store in the data base.*********************
 	include'./dbconnect.php';
 	
-	$query = "INSERT INTO `pw_case_status`(`MCTSID`, `case_status`, `risk_status`, `updated_by`, `risk_reason`, `next_visit_date`)
-	 VALUES ('$MCTSID','$case_status','$risk_stat','$ANM_ID','$list_of_reasons',curdate())";
+	$query = "INSERT INTO `pw_case_status`(PWID, `case_status`, `risk_status`, `updated_by`, `risk_reason`, `next_visit_date`)
+	 VALUES ('$PWID','$case_status','$risk_stat','$ANM_ID','$list_of_reasons',curdate())";
 	//echo $query;
 	$result = mysqli_query($conn,$query);
 

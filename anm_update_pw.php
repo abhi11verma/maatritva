@@ -30,7 +30,8 @@ if(!empty($json[0]['form_id']))
 {
 	
 //===================================================================================
-$MCTSID = $json[0]['MCTSID'];
+//$MCTSID = $json[0]['MCTSID'];
+$PWID = $json[0]['PWID'];
 $GPS_latitude = $json[0]['GPS_latitude'];
 $GPS_longitude = $json[0]['GPS_longitude'];
 $GPS_Altitude = $json[0]['GPS_Altitude'];
@@ -58,8 +59,8 @@ $Remark = $json[0]['Remark'];
 	//Submit form to database
 	include'./dbconnect.php';
 
-	$query = " INSERT INTO pw_case_update (`MCTSID`, `GPS_latitude`, `GPS_longitude`, `GPS_Altitude`, `preg_mnth`, `ANC_visit_no`, `multi_preg`, `edema`, `headache_bluryvision`, `vaginal_bleeding`, `bp_systolic`, `bp_diastolic`, `mean_arterial_pressure`, `pulse_rate`, `Curr_weight`, `anaemia`, `HIV`, `ANM_ID`, `form_id`, `Remark`) 
-VALUES ('$MCTSID', '$GPS_latitude', '$GPS_longitude', '$GPS_Altitude', '$preg_mnth', '$ANC_visit_no', '$multi_preg', '$edema', '$headache_bluryvision', '$vaginal_bleeding', '$bp_systolic', '$bp_diastolic', '$mean_arterial_pressure', '$pulse_rate', '$Curr_weight', '$anaemia', '$HIV', '$ANM_ID', '$form_id', '$Remark')";
+	$query = " INSERT INTO pw_case_update (`PWID`, `GPS_latitude`, `GPS_longitude`, `GPS_Altitude`, `preg_mnth`, `ANC_visit_no`, `multi_preg`, `edema`, `headache_bluryvision`, `vaginal_bleeding`, `bp_systolic`, `bp_diastolic`, `mean_arterial_pressure`, `pulse_rate`, `Curr_weight`, `anaemia`, `HIV`, `ANM_ID`, `form_id`, `Remark`) 
+VALUES ('$PWID', '$GPS_latitude', '$GPS_longitude', '$GPS_Altitude', '$preg_mnth', '$ANC_visit_no', '$multi_preg', '$edema', '$headache_bluryvision', '$vaginal_bleeding', '$bp_systolic', '$bp_diastolic', '$mean_arterial_pressure', '$pulse_rate', '$Curr_weight', '$anaemia', '$HIV', '$ANM_ID', '$form_id', '$Remark')";
 
 	//echo $query;
 		

@@ -9,7 +9,7 @@ $dbuser = 'idspnashik_maatritva_user';
 /*** mysql password ***/
 $dbpass = 'maatritva_db_2016';
 /*** mysql database***/
-$dbname = 'idspnashik_maatritva';
+$dbname = 'idspnashik_maatritva2';
 
 
 $conn = mysqli_connect("$dbhost","$dbuser","$dbpass","$dbname");

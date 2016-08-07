@@ -21,14 +21,14 @@ $request = $_GET['data'];
 //echo $request;
 $json = json_decode($request,true);
 //print_r($json);
-[{"form_id":"oioi","risk_status":"1","emp_id":"MO1","Remark":"oi","next_visit_date":"2016-12-02"}]
+//[{"form_id":"oioi","risk_status":"1","emp_id":"MO1","Remark":"oi","next_visit_date":"2016-12-02"}]
 //Check value if empty
 if(!empty($json[0]['form_id']))
 {
 	
 //===================================================================================
-$MCTSID = $json[0]['MCTSID'];
-
+//$MCTSID = $json[0]['MCTSID'];
+$PWID = $json[0]['PWID'];
 $risk_status = $json[0]['risk_status'];
 $updated_by = $json[0]['emp_id'];
 //$risk_reason = $json[0]['risk_reason'];
@@ -52,8 +52,8 @@ else{
 	//Submit form to database
 	include'./dbconnect.php';
 
-	$query = "INSERT INTO `pw_case_status`(`MCTSID`, `case_status`, `risk_status`, `updated_by`, `next_visit_date`,`remark`)
-	 VALUES ('$MCTSID','$case_status','$risk_status','$updated_by','$next_visit_date','$Remark')";
+	$query = "INSERT INTO `pw_case_status`(`PWID`, `case_status`, `risk_status`, `updated_by`, `next_visit_date`,`remark`)
+	 VALUES ('$PWID','$case_status','$risk_status','$updated_by','$next_visit_date','$Remark')";
 
 	//echo $query;
 	$result = mysqli_query($conn,$query);

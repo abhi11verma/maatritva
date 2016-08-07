@@ -6,7 +6,8 @@ select
 `v_latest_pw_case_status`.`case_status` AS `case_status`,
 area.area_name AS Area,
 pw. `Name`AS `Name`,
-pw. `MCTSID`AS `MCTSID`,
+PW.PWID AS PWID,
+-- pw. `MCTSID`AS `MCTSID`,
 pw. `DOB`AS `DOB`,
 pw. `Age`AS `Age`,
 pw. `Address`AS `Address`,
@@ -47,8 +48,8 @@ pw_updated. `HIV`AS `HIV`,
 pw. `ANM_ID`AS `ANM_ID`,
 timestampdiff(MONTH,`pw`.`LMP`,curdate())+1 AS `month_of_preg`,
 date_format(cast(`v_latest_pw_case_status`.`next_visit_date` as date),'%e-%c-%Y') AS `DUE_DATE` 
-from (`pw_reg` `pw` left join `v_latest_pw_case_status` on((`pw`.`MCTSID` = `v_latest_pw_case_status`.`MCTSID`)))
-join area_details area on area.area_id = pw.area_id left join v_latest_pw_case_update pw_updated on pw.MCTSID = pw_updated.MCTSID
+from (`pw_reg` `pw` left join `v_latest_pw_case_status` on((`pw`.`PWID` = `v_latest_pw_case_status`.`PWID`)))
+join area_details area on area.area_id = pw.area_id left join v_latest_pw_case_update pw_updated on pw.PWID = pw_updated.PWID
 
 -- ======================================================================================================
 
@@ -71,18 +72,6 @@ UPDATE user_profile SET user_profile.emp_id = CONCAT(NEW.emp_type,NEW.rec_id) WH
 END//
 
 -- =======================================================================================================
-
-CREATE OR REPLACE view  `v_pw_case_latest_status` AS 
-select `pw_case_status_system`.`rec_id` AS `rec_id`,
-`pw_case_status_system`.`MCTS_ID` AS `MCTS_ID`,
-`pw_case_status_system`.`system_risk_status` AS `system_risk_status`,
-`pw_case_status_system`.`risk_reason` AS `risk_reason`,
-`pw_case_status_system`.`visit_status` AS `visit_status`,
-pw.area_id AS area_id,
-max(`pw_case_status_system`.`Time_stamp`) AS `Time_stamp` 
-from `pw_case_status_system` left join pw_reg pw on pw.MCTSID = pw_case_status_system.MCTS_ID
-group by `pw_case_status_system`.`MCTS_ID` order by `pw_case_status_system`.`rec_id`
-
 ----------------------------------------------
 SELECT STATUS . * , pw.area_id
 FROM  `v_pw_case_latest_status` 
@@ -113,7 +102,8 @@ WHERE CONCAT(MCTSID,`Form_entry_time`) IN (SELECT CONCAT(mo.MCTSID,max(mo.Form_e
 
 CREATE OR REPLACE VIEW `v_latest_pw_case_status` AS 
 select `pw_case_status`.`rec_id` AS `rec_id`,
-`pw_case_status`.`MCTSID` AS `MCTSID`,
+`pw_case_status`.`PWID` AS `PWID`,
+-- `pw_case_status`.`MCTSID` AS `MCTSID`,
 pw_reg.area_id AS area_id,
 `pw_case_status`.`case_status` AS `case_status`,
 `pw_case_status`.`risk_status` AS `risk_status`,
@@ -122,9 +112,9 @@ pw_reg.area_id AS area_id,
 `pw_case_status`.`next_visit_date` AS `next_visit_date`,
 `pw_case_status`.`remark` AS `remark`,
 `pw_case_status`.`Time_stamp` AS `Time_stamp` 
-from `pw_case_status` left join pw_reg on pw_case_status.MCTSID = pw_reg.MCTSID
-where concat(`pw_case_status`.`MCTSID`,`pw_case_status`.`Time_stamp`) in (select concat(`pw_case_status`.`MCTSID`,max(`pw_case_status`.`Time_stamp`)) 
-from `pw_case_status` group by `pw_case_status`.`MCTSID`)
+from `pw_case_status` left join pw_reg on pw_case_status.PWID = pw_reg.PWID
+where concat(`pw_case_status`.`PWID`,`pw_case_status`.`Time_stamp`) in (select concat(`pw_case_status`.`PWID`,max(`pw_case_status`.`Time_stamp`)) 
+from `pw_case_status` group by `pw_case_status`.`PWID`)
 
 ==========================================================================================
 -- query for getting summarised result according to employee id
@@ -144,6 +134,6 @@ from `pw_case_status` group by `pw_case_status`.`MCTSID`)
  
 CREATE OR REPLACE VIEW `v_latest_pw_case_update` AS 
 select pw_case_update.* 
-from `pw_case_update` where concat(`pw_case_update`.`MCTSID`,`pw_case_update`.`Form_entry_time`) in (select concat(`pw_case_update`.`MCTSID`,max(`pw_case_update`.`Form_entry_time`)) 
-from `pw_case_update` group by `pw_case_update`.`MCTSID`)
+from `pw_case_update` where concat(`pw_case_update`.`PWID`,`pw_case_update`.`Form_entry_time`) in (select concat(`pw_case_update`.`PWID`,max(`pw_case_update`.`Form_entry_time`)) 
+from `pw_case_update` group by `pw_case_update`.`PWID`)
 ===========================================================================================
