@@ -66,6 +66,9 @@ else{
 	
     		$query2 = "update user_profile SET emp_id = '$emp_id' WHERE rec_id = $id ";
         	mysqli_query($conn,$query2);
+			
+    		$query2 = "INSERT INTO `emp_area`(`emp_id`, `area_id`) VALUES ('$emp_id','$area_id') ";
+        	mysqli_query($conn,$query2);
 			mysqli_close($conn);
 
 			 deliver_response(200,'Registered_Successfully',1,$emp_id);

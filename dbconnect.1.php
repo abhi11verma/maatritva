@@ -1,21 +1,21 @@
 <?php
 
 /*** mysql hostname ***/
-$dbhost = 'localhost';
+$dbhost = 'mysql.hostinger.in';
 
 /*** mysql username ***/
-$dbuser = 'idspnashik_maatritva_user';
+$dbuser = 'u652239707_id';
 
 /*** mysql password ***/
-$dbpass = 'maatritva_db_2016';
+$dbpass = 'commonpassword';
 /*** mysql database***/
-$dbname = 'idspnashik_maatritva';
+$dbname = 'u652239707_id';
 
 
 $conn = mysqli_connect("$dbhost","$dbuser","$dbpass","$dbname");
 
 
-$query = "SET SESSION time_zone = '+5:30'";
+$query = "SET SESSION time_zone = 'Asia/Kolkata'";
 mysqli_query($conn,$query);
 
 

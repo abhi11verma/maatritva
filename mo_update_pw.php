@@ -21,7 +21,7 @@ $request = $_GET['data'];
 //echo $request;
 $json = json_decode($request,true);
 //print_r($json);
-
+[{"form_id":"oioi","risk_status":"1","emp_id":"MO1","Remark":"oi","next_visit_date":"2016-12-02"}]
 //Check value if empty
 if(!empty($json[0]['form_id']))
 {

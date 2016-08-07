@@ -17,22 +17,17 @@ if($_SERVER['REQUEST_METHOD'] == 'OPTIONS')
 header("Content-Type:application/json");
 //include("./function.php");
 
-//$request = $_POST['data'];
-$request = file_get_contents('php://input');
+$request = $_GET['data'];
 
-//echo "hello";
-//echo $request;
-//exit();
-
-//$request = '[{"Name":"oioi","DOB":"","Age":"09","Address":"oi","Landmark":"21","pw_ph_no":"4","MCTSID":"5445","area_id":"1","LMP":"2016-08-19","ANC_visit_no":"1","primigravida":"NO","still_birth":"NA","last_preg_gap":"1","low_birth_weight":"NA","miscarriage":"NO","blood_loss":"NA","prior_pih":"NO","pih_mother_sister":"NO","med_diagnosis":"1","diabetes_mother_sister":"YES","multi_preg":"1","headache_bluryvision":"YES","vaginal_bleeding":"YES","anaemia":"NO","bp_systolic":"2121212121","bp_diastolic":"21","mean_arterial_pressure":"707070721","pulse_rate":"2","Height_mtr":"2","Curr_weight":"12","BMI":"30000","emp_id":"anm1","form_id":"1470406443106_123455","edema":"YES","preg_count":"1","HIV":"NA","preg_mnth":"1","c_sec":"NA"}]';
+//$request = '[{"Name":"po","DOB":"2016-08-17","Age":"","Address":"kjk","Landmark":"kj","pw_ph_no":"65","MCTSID":"54","area_id":"1","LMP":"2016-08-04","ANC_visit_no":"1","primigravida":"NO","still_birth":"NA","last_preg_gap":"1","low_birth_weight":"NO","miscarriage":"NO","blood_loss":"NO","prior_pih":"NO","pih_mother_sister":"NO","med_diagnosis":"1","diabetes_mother_sister":"NO","multi_preg":"1","headache_bluryvision":"NO","vaginal_bleeding":"NA","anaemia":"NO","bp_systolic":"21","bp_diastolic":"21","mean_arterial_pressure":"21","pulse_rate":"21","Height_mtr":"2","Curr_weight":"121","BMI":"302500","ANM_ID":123455,"form_id":"1470230249612_123455","edema":"YES","preg_count":"1","HIV":"NA","preg_mnth":"1","c_sec":"NO"}]';
 
 //[{"Name":"","GPS_latitude":1,"GPS_longitude":2,"GPS_Altitude":3,"multi_preg":"1","headache_bluryvision":"NO","vaginal_bleeding":"NA","anaemia":"NA","bp_systolic":"212","bp_diastolic":"21","mean_arterial_pressure":"85","pulse_rate":"21","Height_mtr":"554","Curr_weight":"5","BMI":"0.16","ANM_ID":123455,"form_id":"1469973972899_123455","edema":"YES","HIV":"YES"}]
 
 $json = json_decode($request,true);
 
-//print_r($request);
+//print_r($json);
 //echo $json[0]['form_id'];
-//exit();
+
 /*
 $json = array('Name' => 'Laxmi','MCTSID' => '2147483647','DOB' => '1991-01-28','Age' => '23','Socio_Eco_Status' => 'LOWER','Address' => NULL,'Landmark' => NULL,'Area' => 'Ambad','pw_ph_no' => NULL,'GPS_latitude' => '1.000000','GPS_longitude' => '2.000000','GPS_Altitude' => '34.000000','LMP' => '2016-04-04','ANC_visit_no' => '2','preg_count' => NULL,'succ_preg_count' => NULL,'preg_mnth' => NULL,'doc_visit' => NULL,'primigravida' => 'NO','nulloparous' => 'YES','last_preg_gap' => '2','pih_mother' => NULL,'have_sister' => 'YES','pih_sister' => NULL,'prior_pih' => 'YES','last_preg_status' => 'Aborted/SB/NND','med_diagnosis' => 'Hypertension','IVF_his' => 'NO','chronic_bp' => 'NO','Diabetes_his' => '','c_sec' => NULL,'edema' => NULL,'multiparous' => 'NO','nausea_vomiting' => 'YES','bp_systolic' => '120','bp_diastolic' => '80','mean_arterial_pressure' => '10000.000000','pulse_rate' => '80','Height_mtr' => '56','Curr_weight' => '55','BMI' => '35.000000','ANM_ID' => '0','form_id' => 'tetsint_php_array');
 */
@@ -121,24 +116,28 @@ $form_id = $json[0]['form_id'];
 	//====================Processing script=============================
 	$risk_stat = 2; //1=SYS_AT_RISK,2=SYS_NORMAL
 	$risk_reason = array();
-
+/*
 	if($Age<18 OR $Age >30) //************************
 	{
 		$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
 		$risk_reason[] = "AGE";
-		
 	}
-	if($preg_count == 1 AND $Age >30)
+	if($primigravida == "YES" AND $Age>30)//************************
 	{
 		$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-		$risk_reason[] = "elderly primi";
-			
+		$risk_reason[] = "Primigravida";
 	}
-		
-	if($preg_count >=4)
-	{
-		$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-		$risk_reason[] = "grand multipara";
+	elseif ($primigravida ="NO") {
+
+		if($prior_pih == "YES"){
+			$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
+			$risk_reason[] = "Prior PIH";
+		}
+		if($last_preg_status == "Aborted/SB/NND")
+		{
+			$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
+			$risk_reason[] = "Previous preg Aborted/SB/NND";
+		}
 
 	}
 
@@ -147,120 +146,23 @@ $form_id = $json[0]['form_id'];
 		$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
 		$risk_reason[] = "Edema";
 	}
-	if($headache_bluryvision == "YES")
-	{
-		$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-		$risk_reason[] = "headache_bluryvision";
-	}
-
-	if($vaginal_bleeding=="YES")
-	{
-		$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-		$risk_reason[] = "vaginal_bleeding";
-
-	}
-
-	if($preg_count >1)
-	{
-		if($prior_pih == "YES")
-		{
-			$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-			$risk_reason[] = "prior_pih";
-		}
-		if($still_birth == "YES")
-		{
-			$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-			$risk_reason[] = "still_birth";
-		}
-		if($low_birth_weight == "YES")
-		{
-			$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-			$risk_reason[] = "low_birth_weight";
-
-		}
-		if($miscarriage == "YES")
-		{
-			$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-			$risk_reason[] = "miscarriage";
-
-		}
-		if($c_sec == "YES")
-		{
-			$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-			$risk_reason[] = "c_sec";
-
-		}
-		if($blood_loss == "YES")
-		{
-			$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-			$risk_reason[] = "blood_loss";
-
-		}
-
-
-	}
-
-
 	
-	if(!($med_diagnosis == ",NONE OF THESE")) //***********other medical history
+	if(!empty($med_diagnosis)) //***********other medical history
 	{
 		$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
 		$risk_reason[] = $med_diagnosis;
 	}
-
+*/
 	if($pih_mother_sister == "YES")//***********Previous family history
 	{
 		$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-		$risk_reason[] = "Family History PIH";
+		$risk_reason[] = "Family History";
 	}
-	if($diabetes_mother_sister == "YES")//***********Previous family history
+	if($bp_systolic > 130 OR $bp_diastolic > 80)
 	{
 		$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-		$risk_reason[] = "Family History PIH";
+		$risk_reason[] = "Blood Pressure";
 	}
-
-	if($bp_systolic > 140 OR $bp_diastolic > 90)
-	{
-		$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-		$risk_reason[] = "HIGH Blood Pressure";
-	}
-	if($BMI<19)
-	{
-		$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-		$risk_reason[] = "Underweight";
-
-	}
-	elseif ($BMI>=25 AND $BMI <=30) {
-		$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-		$risk_reason[] = "Overweight";
-	}
-	elseif ($BMI >= 30 AND $BMI <= 34.9) {
-		$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-		$risk_reason[] = "Obesity";
-	}
-
-	if($Height_mtr <14.5)
-	{
-		$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-		$risk_reason[] = "short stature";
-
-	}
-	if($HIV == "YES")
-	{
-		$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-		$risk_reason[] = "HIV";
-	}
-	if($anaemia == "YES")
-	{
-		$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-		$risk_reason[] = "anaemia";
-	}
-	if($multi_preg == "YES")
-	{
-		$risk_stat = 1; //1=SYS_AT_RISK,2=SYS_NORMAL
-		$risk_reason[] = "multi pregnant";
-	}
-
 
 	$list_of_reasons = implode(',',$risk_reason);
 
@@ -290,6 +192,7 @@ else{//if form id is not available then execute this block and return invalid re
 	exit(); 
 
 }
+
 
 //====================Webservice funcitons===========================
 

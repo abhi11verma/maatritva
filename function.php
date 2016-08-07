@@ -53,7 +53,7 @@ function check_user($aadhar_id)
         return 0;
     }
 	
-	mysqli_close();
+	mysqli_close($conn);
 }
 
 
@@ -103,7 +103,7 @@ function register_new_user($aadhar_id,$emp_type,$name,$mobile_no,$center_id,$are
            return 0;
            //Some error in insertion to database
        }
-    mysqli_close();
+    mysqli_close($conn);
 }
 
 
